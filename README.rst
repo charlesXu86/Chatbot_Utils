@@ -1,18 +1,18 @@
 一、Chatbot_Utils介绍
 ==========================
 
-    Chatbot_Utils是一个Chatbot_CN的一个辅助工程，主要为对话系统服务，同时也可以为其他业务所用。他将对话系统中的基本算法模型包装，并且提
+Chatbot_Utils是一个Chatbot_CN的一个辅助工程，主要为对话系统服务，同时也可以为其他业务所用。他将对话系统中的基本算法模型包装，并且提
 供通用接口，供外部工程调用。
 
-    这个工程代替了之前Chatbot_CN下的Chatbot_Model功能，Chatbot_Utils提供的功能有：
+这个工程代替了之前Chatbot_CN下的Chatbot_Model功能，Chatbot_Utils提供的功能有：
 
-        1、拼音汉字互转
+    1、拼音汉字互转
 
-        2、文本纠错
+    2、文本纠错
 
-        3、NER
+    3、NER
 
-        4、句法分析
+    4、句法分析
 
 
 二、使用

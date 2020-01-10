@@ -15,9 +15,11 @@
 
 from django.urls import path
 
+from Base_model_rest.Api.bot.Bot_server import bot_server
+
 
 urlpatterns = [
 
-    # path('qa', qa_server), # 问答
+    path('chatbot', bot_server), # 多轮对话
 
 ]
