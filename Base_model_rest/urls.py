@@ -20,6 +20,6 @@ from Base_model_rest.Api.bot.Bot_server import bot_server
 
 urlpatterns = [
 
-    path('chatbot', bot_server), # 多轮对话
+    path('wechat_bot', bot_server), # 多轮对话
 
 ]
