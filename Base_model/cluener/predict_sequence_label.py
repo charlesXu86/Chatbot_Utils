@@ -12,20 +12,13 @@ from bert4tf import tokenization
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-# vocab_file = "/Data/public/Bert/chinese_wwm_ext_L-12_H-768_A-12/vocab.txt"
-# tokenizer_ = tokenization.FullTokenizer(vocab_file=vocab_file)
-# label2id = json.loads(open("./label2id.json").read())
-# id2label = [k for k, v in label2id.items()]
-#
-# model_path = "./ner_bert_base/"
-
 class NER_model():
 
     def __init__(self):
-        self.model_path = "./ner_bert_base/"
+        self.model_path = "/Data/xiaobensuan/Codes/Chatbot_Utils/Base_model/cluener/ner_bert_base/"
         self.vocab_file = "/Data/public/Bert/chinese_wwm_ext_L-12_H-768_A-12/vocab.txt"
         self.tokenizer_ = tokenization.FullTokenizer(vocab_file=self.vocab_file)
-        self.label2id = json.loads(open("./label2id.json").read())
+        self.label2id = json.loads(open("/Data/xiaobensuan/Codes/Chatbot_Utils/Base_model/cluener/label2id.json").read())
         self.id2label = [k for k, v in self.label2id.items()]
 
         self.sess = self.load_model(self.model_path)
@@ -93,18 +86,7 @@ class NER_model():
         sess_ = tf.Session()
         saver.restore(sess_, input_checkpoint)
 
-        # opts = sess_.graph.get_operations()
-        # for v in opts:
-        #     print(v.name)
         return sess_
-
-    # sess = load_model(model_path)
-    # input_ids = sess.graph.get_tensor_by_name("input_ids:0")
-    # input_mask = sess.graph.get_tensor_by_name("input_mask:0")  # is_training
-    # segment_ids = sess.graph.get_tensor_by_name("segment_ids:0")  # fc/dense/Relu  cnn_block/Reshape
-    # keep_prob = sess.graph.get_tensor_by_name("keep_prob:0")
-    # p = sess.graph.get_tensor_by_name("loss/ReverseSequence_1:0")
-
 
     def predict(self, text):
         data = [text]
@@ -124,7 +106,6 @@ class NER_model():
         for index, prob in enumerate(probs):
             for v in prob[1:len(data[index]) + 1]:
                 result.append(self.id2label[int(v)])
-        print(result)
         labels = {}
         start = None
         index = 0
@@ -134,37 +115,36 @@ class NER_model():
                     label = result[index - 1][2:]
                     if labels.get(label):
                         te_ = text[start:index]
-                        # print(te_, labels)
                         labels[label][te_] = [[start, index - 1]]
                     else:
                         te_ = text[start:index]
-                        # print(te_, labels)
                         labels[label] = {te_: [[start, index - 1]]}
                 start = index
-                # print(start)
             if re.search("^O", t):
                 if start is not None:
                     # print(start)
                     label = result[index - 1][2:]
                     if labels.get(label):
                         te_ = text[start:index]
-                        # print(te_, labels)
                         labels[label][te_] = [[start, index - 1]]
                     else:
                         te_ = text[start:index]
-                        # print(te_, labels)
                         labels[label] = {te_: [[start, index - 1]]}
-                # else:
-                #     print(start, labels)
                 start = None
             index += 1
-        # print(labels)
+        if start is not None:
+            label = result[start][2:]
+            if labels.get(label):
+                te_ = text[start:index]
+                labels[label][te_] = [[start, index - 1]]
+            else:
+                te_ = text[start:index]
+                labels[label] = {te_: [[start, index - 1]]}
         return labels
 
 
-if __name__ == "__main__":
-    text_ = "小笨毕业于北京大学"
-
-    ner = NER_model()
-    res_ = ner.predict(text_)
-    print(res_)
+# if __name__ == "__main__":
+#     text_= "小笨毕业与北京大学"
+#     ner = NER_model()
+#     res_ = ner.predict(text_)
+#     print(res_)

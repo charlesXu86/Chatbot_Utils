@@ -17,9 +17,13 @@ from django.urls import path
 
 from Base_model_rest.Api.bot.Bot_server import bot_server
 
+from Base_model_rest.Api.ner.NER_server import ner_server
+
 
 urlpatterns = [
 
     path('wechat_bot', bot_server), # 多轮对话
+
+    path('cluener', ner_server)
 
 ]
