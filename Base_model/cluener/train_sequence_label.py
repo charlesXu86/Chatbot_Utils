@@ -17,15 +17,17 @@ import tensorflow as tf
 from bert4tf import modeling
 from bert4tf import optimization  # _freeze as optimization
 import os, math, json
+import pathlib
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 
 bert_dir = '/Data/public/Bert/chinese_wwm_ext_L-12_H-768_A-12/'
+basedir = str(pathlib.Path(os.path.abspath(__file__)).parent)
 
 # 100167/64 = 1565.1= 1566 * 5 = 7830
 config = {
-    "in_1": "/Data/xiaobensuan/Codes/Chatbot_Utils/Base_model/cluener/data/train.tf_record",  # 第一个输入为 训练文件
-    "in_2": "/Data/xiaobensuan/Codes/Chatbot_Utils/Base_model/cluener/data/dev.tf_record",  # 第二个输入为 验证文件
+    "in_1": os.path.join(basedir + "/data/train.tf_record"),  # 第一个输入为 训练文件
+    "in_2": os.path.join(basedir + "/data/dev.tf_record"),  # 第二个输入为 验证文件
     "bert_config": bert_dir + "bert_config.json",  # bert模型配置文件
     "init_checkpoint": bert_dir + "bert_model.ckpt",  # 预训练bert模型
     "train_examples_len": 10748,

@@ -7,18 +7,21 @@
 import os
 import re
 import json
+import pathlib
 import tensorflow as tf
 from bert4tf import tokenization
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
+basedir = str(pathlib.Path(os.path.abspath(__file__)).parent)
+
 class NER_model():
 
     def __init__(self):
-        self.model_path = "/Data/xiaobensuan/Codes/Chatbot_Utils/Base_model/cluener/ner_bert_base/"
+        self.model_path = os.path.join(basedir + "/ner_bert_base/")
         self.vocab_file = "/Data/public/Bert/chinese_wwm_ext_L-12_H-768_A-12/vocab.txt"
         self.tokenizer_ = tokenization.FullTokenizer(vocab_file=self.vocab_file)
-        self.label2id = json.loads(open("/Data/xiaobensuan/Codes/Chatbot_Utils/Base_model/cluener/label2id.json").read())
+        self.label2id = json.loads(open(basedir + "/label2id.json").read())
         self.id2label = [k for k, v in self.label2id.items()]
 
         self.sess = self.load_model(self.model_path)
@@ -143,8 +146,8 @@ class NER_model():
         return labels
 
 
-# if __name__ == "__main__":
-#     text_= "小笨毕业与北京大学"
-#     ner = NER_model()
-#     res_ = ner.predict(text_)
-#     print(res_)
+if __name__ == "__main__":
+    text_= "王小明毕业与北京大学"
+    ner = NER_model()
+    res_ = ner.predict(text_)
+    print(res_)

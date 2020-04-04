@@ -5,7 +5,7 @@
  
 @Software:   PyCharm
  
-@File    :   get_ner_result.py
+@File    :   get_sentiment_result.py
  
 @Time    :   2020-01-13 11:19
  

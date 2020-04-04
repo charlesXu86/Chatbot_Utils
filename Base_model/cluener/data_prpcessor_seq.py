@@ -97,7 +97,7 @@ def prepare_tf_record_data(tokenizer, max_seq_len, label2id, path, out_path):
     """
         生成训练数据， tf.record, 单标签分类模型, 随机打乱数据
     """
-    writer = tf.python_io.TFRecordWriter(out_path)
+    writer = tf.io.TFRecordWriter(out_path)
     example_count = 0
 
     for line in open(path):
