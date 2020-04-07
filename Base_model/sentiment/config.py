@@ -26,7 +26,7 @@ class Config():
         # self.data_dir = '/Data/xiaobensuan/cnews/'
         self.output_dir = basedir + '/Base_model/Emotion/results'   # fine-tune 的输出模型
         self.init_checkpoint = '/Data/public/Bert/chinese_wwm_L-12_H-768_A-12/bert_model.ckpt'
-        # self.pb_model_dir = basedir + '/Base_model/Domain/pb'
+        self.pb_model_dir = basedir + '/Base_model/Emotion/pb_results'
 
         self.train_checkpoint = '/home/xsq/nlp_code/Base_model/Emotion/results'
         self.do_lower_case = True
@@ -42,13 +42,13 @@ class Config():
         self.task_name = 'emotion'
         self.gpu_memory_fraction = 0.8
 
-        self.max_seq_length = 100
+        self.max_seq_length = 80
         self.doc_stride = 128
         self.max_query_length = 64
         self.do_train = False
         self.do_predict = True
         self.do_eval = True
-        self.batch_size = 20
+        self.batch_size = 16
 
         self.learning_rate = 5e-5
         self.num_train_epochs = 3.0

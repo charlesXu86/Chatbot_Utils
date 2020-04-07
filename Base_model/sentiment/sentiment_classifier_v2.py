@@ -19,6 +19,7 @@ import numpy as np
 import pickle as pkl
 import pathlib
 import json
+import logging
 
 from queue import Queue
 from threading import Thread
@@ -29,7 +30,9 @@ from bert4tf import tokenization
 from Base_model.sentiment.config import Config
 from Base_model.sentiment.Classifier_utils import convert_to_unicode
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+
+logger = logging.getLogger(__name__)
 
 basedir = str(pathlib.Path(os.path.abspath(__file__)).parent)
 
@@ -155,7 +158,7 @@ class DomainProcessor(DataProcessor):
     """Processor for the FenLei data set (GLUE version)."""
 
     def get_train_examples(self, data_dir):
-        file_path = os.path.join(data_dir, 'train.txt')
+        file_path = os.path.join(data_dir, 'sentiment_train.txt')
         with open(file_path, 'r', encoding="utf-8") as f:
             reader = f.readlines()
         random.seed(0)
@@ -165,7 +168,8 @@ class DomainProcessor(DataProcessor):
         for index, line in enumerate(reader):
             guid = 'train-%d' % index
             split_line = line.strip().split("\t")
-            text_a = tokenization.convert_to_unicode(split_line[1])
+            if len(split_line) == 2:
+                text_a = tokenization.convert_to_unicode(split_line[1])
             text_b = None
             label = split_line[0]
             examples.append(InputExample(guid=guid, text_a=text_a,
@@ -174,7 +178,7 @@ class DomainProcessor(DataProcessor):
         return examples
 
     def get_dev_examples(self, data_dir):
-        file_path = os.path.join(data_dir, 'val.txt')
+        file_path = os.path.join(data_dir, 'sentiment_valid.txt')
         with open(file_path, 'r', encoding="utf-8") as f:
             reader = f.readlines()
         random.shuffle(reader)
@@ -191,7 +195,7 @@ class DomainProcessor(DataProcessor):
         return examples
 
     def get_test_examples(self, data_dir):
-        file_path = os.path.join(data_dir, 'cnews.test.txt')
+        file_path = os.path.join(data_dir, 'sentiment_test.txt')
         with open(file_path, 'r', encoding="utf-8") as f:
             reader = f.readlines()
         # random.shuffle(reader)  # 测试集不打乱数据，便于比较
@@ -233,7 +237,8 @@ class SentimentCLS():
         self.tokenizer = tokenization.FullTokenizer(vocab_file=cf.vocab_file, do_lower_case=True)
         self.batch_size = batch_size
         self.estimator = None
-        self.processor = EmotionProcessor()    # 加载训练、测试数据class
+        # self.processor = EmotionProcessor()    # 加载训练、测试数据class
+        self.processor = DomainProcessor()
         tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
 
     def set_mode(self, mode):
@@ -751,40 +756,41 @@ class SentimentCLS():
         return (loss, per_example_loss, logits, probabilities)
 
 
-    # def save_PBmodel(self, num_labels):
-    #     """    保存PB格式中文分类模型    """
-    #     try:
-    #         # 如果PB文件已经存在，则返回PB文件的路径，否则将模型转化为PB文件，并且返回存储PB文件的路径
-    #         pb_file = os.path.join(cf.pb_model_dir, 'classification_model.pb')
-    #         graph = tf.Graph()
-    #         with graph.as_default():
-    #             input_ids = tf.placeholder(tf.int32, (None, cf.max_seq_length), 'input_ids')
-    #             input_mask = tf.placeholder(tf.int32, (None, cf.max_seq_length), 'input_mask')
-    #             bert_config = modeling.BertConfig.from_json_file(cf.bert_config_file)
-    #             loss, per_example_loss, logits, probabilities = self.create_classification_model(
-    #                 bert_config=bert_config,
-    #                 is_training=False,
-    #                 input_ids=input_ids,
-    #                 input_mask=input_mask,
-    #                 segment_ids=None,
-    #                 labels=None,
-    #                 num_labels=num_labels)
-    #
-    #             probabilities = tf.identity(probabilities, 'pred_prob')
-    #             saver = tf.train.Saver()
-    #
-    #             with tf.Session() as sess:
-    #                 sess.run(tf.global_variables_initializer())
-    #                 latest_checkpoint = tf.train.latest_checkpoint(cf.output_dir)
-    #                 saver.restore(sess, latest_checkpoint)
-    #                 tmp_g = tf.compat.v1.graph_util.convert_variables_to_constants(sess, graph.as_graph_def(), ['pred_prob'])
-    #
-    #         # 存储二进制模型到文件中
-    #         with tf.gfile.GFile(pb_file, 'wb') as f:
-    #             f.write(tmp_g.SerializeToString())
-    #         return pb_file
-    #     except Exception as e:
-    #         print('fail to optimize the graph! %s', e)
+    def save_PBmodel(self):
+        """    保存PB格式中文分类模型    """
+        # try:
+        # 如果PB文件已经存在，则返回PB文件的路径，否则将模型转化为PB文件，并且返回存储PB文件的路径
+        pb_file = os.path.join(cf.pb_model_dir, 'sentiment_cls_model.pb')
+        graph = tf.Graph()
+        with graph.as_default():
+            input_ids = tf.placeholder(tf.int32, (None, cf.max_seq_length), 'input_ids')
+            input_mask = tf.placeholder(tf.int32, (None, cf.max_seq_length), 'input_mask')
+            bert_config = modeling.BertConfig.from_json_file(cf.bert_config_file)
+            loss, per_example_loss, logits, probabilities = self.create_classification_model(
+                bert_config=bert_config,
+                is_training=False,
+                input_ids=input_ids,
+                input_mask=input_mask,
+                segment_ids=None,
+                labels=None,
+                num_labels=len(self.processor.get_labels()))
+
+            probabilities = tf.identity(probabilities, 'pred_prob')
+            saver = tf.train.Saver()
+
+            with tf.Session() as sess:
+                sess.run(tf.global_variables_initializer())
+                latest_checkpoint = tf.train.latest_checkpoint(cf.output_dir)
+                saver.restore(sess, latest_checkpoint)
+                tmp_g = tf.compat.v1.graph_util.convert_variables_to_constants(sess, graph.as_graph_def(), ['pred_prob'])
+
+        # 存储二进制模型到文件中
+        with tf.gfile.GFile(pb_file, 'wb') as f:
+            f.write(tmp_g.SerializeToString())
+        logger.info('Pb_model saved success')
+        return pb_file
+        # except Exception as e:
+        #     print('fail to optimize the graph! %s', e)
 
 
     def train(self):
@@ -879,21 +885,23 @@ class SentimentCLS():
             raise ValueError("Please set the 'mode' parameter")
         self.input_queue.put([sentence])
         label = self.get_label_list()
-        # probsss = int(np.argmax(self.output_queue.get()['probabilities']))
+        # sss = self.output_queue.get()['probabilities']
+        # prob = int(np.argmax(self.output_queue.get()['probabilities']))
         prediction = label[int(np.argmax(self.output_queue.get()['probabilities']))]
         return prediction
 
 
-    # save_PBmodel(len(label_list))  # 生成单个pb模型。
-# if __name__ == '__main__':
-#     cls = SentimentCLS()
-#     if cf.do_train:
-#         cls.set_mode(tf.estimator.ModeKeys.TRAIN)
-#         cls.train()
-#         cls.set_mode(tf.estimator.ModeKeys.EVAL)
-#         cls.eval()
-#     if cf.do_predict:
-#         cls.set_mode(tf.estimator.ModeKeys.PREDICT)
-#         sentence = '我好害怕'
-#         y = cls.predict(sentence)
-#         print(y)
+    # save_PBmodel()  # 生成单个pb模型。
+if __name__ == '__main__':
+    cls = SentimentCLS()
+    if cf.do_train:
+        cls.set_mode(tf.estimator.ModeKeys.TRAIN)
+        cls.train()
+        cls.set_mode(tf.estimator.ModeKeys.EVAL)
+        cls.eval()
+    if cf.do_predict:
+        cls.set_mode(tf.estimator.ModeKeys.PREDICT)
+        sentence = '行行行，我知道了'
+        y = cls.predict(sentence)
+        print(y)
+    # cls.save_PBmodel()
