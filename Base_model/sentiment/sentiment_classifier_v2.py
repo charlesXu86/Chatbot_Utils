@@ -885,7 +885,7 @@ class SentimentCLS():
             raise ValueError("Please set the 'mode' parameter")
         self.input_queue.put([sentence])
         label = self.get_label_list()
-        # sss = self.output_queue.get()['probabilities']
+        # prob = np.array(self.output_queue.get()['probabilities'])[0:1]
         # prob = int(np.argmax(self.output_queue.get()['probabilities']))
         prediction = label[int(np.argmax(self.output_queue.get()['probabilities']))]
         return prediction

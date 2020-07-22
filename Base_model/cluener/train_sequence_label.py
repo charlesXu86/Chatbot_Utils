@@ -14,8 +14,8 @@
 '''
 
 import tensorflow as tf
-from bert4tf import modeling
-from bert4tf import optimization  # _freeze as optimization
+from Base_model.bert import modeling
+from Base_model.bert import optimization  # _freeze as optimization
 import os, math, json
 import pathlib
 

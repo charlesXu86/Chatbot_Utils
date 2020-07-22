@@ -14,8 +14,10 @@
 '''
 from copy import deepcopy
 from Base_model.cluener.predict_sequence_label import NER_model
+from Base_model.utils.time_utils import get_time
 
 ner = NER_model()
+
 
 def get_ner(msg):
     '''
@@ -39,5 +41,13 @@ def get_ner(msg):
             result['start'] = v2[0][0]
             result['end'] = v2[0][1]
             res_.append(deepcopy(result))
+
+    time = get_time(msg)
+    if time['key']:
+        result['entity'] = 'date-time'
+        result['value'] = time['key']
+        result['date'] = time['date']
+
+        res_.append(deepcopy(result))
 
     return res_

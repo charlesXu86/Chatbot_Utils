@@ -19,6 +19,7 @@ from Base_model_rest.Api.bot.Bot_server import bot_server
 
 from Base_model_rest.Api.ner.NER_server import ner_server
 from Base_model_rest.Api.sentiment.Sentiment_cls_server import sentiment_server
+from Base_model_rest.Api.intent.intent_server import intent_server
 
 
 urlpatterns = [
@@ -27,6 +28,8 @@ urlpatterns = [
 
     path('cluener', ner_server),
 
-    path('sentiment', sentiment_server)   # 情感分类
+    path('sentiment', sentiment_server),   # 情感分类
+
+    path('intent', intent_server)
 
 ]

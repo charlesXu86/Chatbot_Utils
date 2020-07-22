@@ -26,12 +26,11 @@ def get_sentiment_res(msg):
     :param msg:
     :return:
     '''
-    resul = {
-        'sentiment': ''
-         }
+    resul = { }
 
     sentiment_result = dc.predict(msg)
     resul['sentiment'] = sentiment_result
+    # resul['prob'] = prob
 
     return resul
 

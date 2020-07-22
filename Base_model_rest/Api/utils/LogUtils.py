@@ -13,8 +13,12 @@
  
 '''
 
+import os
 import logging
+import pathlib
 from logging import handlers
+
+basedir = str(pathlib.Path(os.path.abspath(__file__)).parent.parent.parent.parent)
 
 class Logger(object):
     level_relations = {
@@ -25,10 +29,10 @@ class Logger(object):
         'crit':logging.CRITICAL
     }
 
-    all_log = './all.log'
-    info_log = './info.log'
+    all_log = basedir + '/log/all.log'
+    info_log = basedir + '/log/info.log'
 
-    def __init__(self,filename,level='info', when='D',backCount=50,fmt='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'):
+    def __init__(self,filename,level='info', when='MIDNIGHT',backCount=50,fmt='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'):
         self.logger = logging.getLogger(filename)
         format_str = logging.Formatter(fmt)#设置日志格式
         self.logger.setLevel(self.level_relations.get(level))#设置日志级别

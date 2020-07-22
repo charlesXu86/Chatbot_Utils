@@ -18,13 +18,13 @@ import json
 import logging
 import datetime
 
-from Base_model_rest.Api.ner.get_ner_result import get_ner
+from Base_model_rest.Api.intent.get_intent_result import get_intention
 from Base_model_rest.Api.utils.LogUtils import Logger    # 打印日志
 
 logger = logging.getLogger(__name__)
 
 
-def ner_server(request):
+def intent_server(request):
     if request.method == 'POST':
 
         try:
@@ -32,7 +32,7 @@ def ner_server(request):
             msg = jsonData["msg"]
             localtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            result = get_ner(msg)
+            result = get_intention(msg)
             dic = {
                 "result": result,
                 "time": localtime
