@@ -3,7 +3,7 @@
 '''
 @Author  :   Xu
 
-@Software:   PyCharm
+@Software:
 
 @File    :   domain_classifier.py
 
