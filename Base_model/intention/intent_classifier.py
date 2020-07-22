@@ -7,7 +7,7 @@
 
 @File    :   domain_classifier.py
 
-@Time    :   2019-11-06 14:25
+@Time    :   2019-11-06
 
 @Desc    :  基于bert的分类模型的fine-tune的领域分类模型，模型准确率验证通过，但是需要修改模型的初始化方法
 
