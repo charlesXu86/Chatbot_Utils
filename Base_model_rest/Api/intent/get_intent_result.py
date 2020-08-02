@@ -23,21 +23,16 @@ intent.set_mode(tf.estimator.ModeKeys.PREDICT)
 
 
 def get_intention(msg):
-    '''
+    """
     获取ner的结果并做简单处理
     :param msg:
     :return:
-    '''
+    """
     result = []
 
     model_result = sorted(intent.predict(msg).items(), key=lambda  x:x[1], reverse=True)
     for one in model_result:
-        tmp = {
-            'name':'',
-            'confidence':0
-        }
-        tmp['name'] = one[0]
-        tmp['confidence'] = one[1]
+        tmp = {'name': one[0], 'confidence': one[1]}
         result.append(tmp)
 
     return result
