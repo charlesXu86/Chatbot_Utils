@@ -28,13 +28,16 @@ def get_intention(msg):
     :param msg:
     :return:
     '''
+    result = []
 
-    result = {
+    model_result = sorted(intent.predict(msg).items(), key=lambda  x:x[1], reverse=True)
+    for one in model_result:
+        tmp = {
+            'name':'',
+            'confidence':0
+        }
+        tmp['name'] = one[0]
+        tmp['confidence'] = one[1]
+        result.append(tmp)
 
-    }
-
-    # model_result = sorted(intent.predict(msg).items(), key=lambda  x:x[1], reverse=True)
-
-    model_result = intent.predict(msg)
-
-    return model_result
+    return result

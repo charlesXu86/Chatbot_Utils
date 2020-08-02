@@ -1,0 +1,59 @@
+{
+  "intent": {
+    "name": "gouche",
+    "confidence": 0.729736864566803
+  },
+  "entities": [
+    {
+      "entity": "car",
+      "start": 3,
+      "end": 4,
+      "value": "宝马"
+    },
+    {
+      "entity": "car",
+      "start": 9,
+      "end": 10,
+      "value": "奥迪"
+    }
+  ],
+  "intent_ranking": [
+    {
+      "name": "zixun",
+      "confidence": 0.729736864566803
+    },
+    {
+      "name": "inform",
+      "confidence": 0.2636376619338989
+    },
+    {
+      "name": "stop",
+      "confidence": 0.004086764995008707
+    },
+    {
+      "name": "affirm",
+      "confidence": 0.0013642017729580402
+    },
+    {
+      "name": "deny",
+      "confidence": 0.000910164148081094
+    },
+    {
+      "name": "bot_challenge",
+      "confidence": 0.00020915297500323504
+    },
+    {
+      "name": "thankyou",
+      "confidence": 0.000049770085752243176
+    },
+    {
+      "name": "chitchat",
+      "confidence": 0.0000047886046559142414
+    },
+    {
+      "name": "greet",
+      "confidence": 5.810792913507612E-7
+    }
+  ],
+  "text": "我想买宝马，不想买奥迪"
+}

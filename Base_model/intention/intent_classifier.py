@@ -27,7 +27,7 @@ from Base_model.bert import tokenization
 from Base_model.intention.config import Config
 
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 
 basedir = str(pathlib.Path(os.path.abspath(__file__)).parent)
 
@@ -825,22 +825,22 @@ class IntentionCLS():
             raise ValueError("Please set the 'mode' parameter")
         self.input_queue.put([sentence])
         label = self.get_label_list()
-        # prob = self.output_queue.get()['probabilities'].tolist()[0]
-        # intent = dict(zip(label, prob))
-        prediction = label[int(np.argmax(self.output_queue.get()['probabilities']))]
-        return prediction
+        prob = self.output_queue.get()['probabilities'].tolist()[0]
+        intent = dict(zip(label, prob))
+        # prediction = label[int(np.argmax(self.output_queue.get()['probabilities']))]
+        return intent
 
 
     # save_PBmodel(len(label_list))  # 生成单个pb模型。
 if __name__ == '__main__':
     cls = IntentionCLS()
-    # if cf.do_train:
-    #     cls.set_mode(tf.estimator.ModeKeys.TRAIN)
-    #     cls.train()
-    #     cls.set_mode(tf.estimator.ModeKeys.EVAL)
-    #     cls.eval()
+    if cf.do_train:
+        cls.set_mode(tf.estimator.ModeKeys.TRAIN)
+        cls.train()
+        cls.set_mode(tf.estimator.ModeKeys.EVAL)
+        cls.eval()
     if cf.do_predict:
         cls.set_mode(tf.estimator.ModeKeys.PREDICT)
-        sentence = '你好'
+        sentence = '我的卡掉了'
         y = cls.predict(sentence)
         print(y)

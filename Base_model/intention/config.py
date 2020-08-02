@@ -42,13 +42,13 @@ class Config():
         self.task_name = 'domain'
         self.gpu_memory_fraction = 0.8
 
-        self.max_seq_length = 100
+        self.max_seq_length = 40
         self.doc_stride = 128
         self.max_query_length = 64
         self.do_train = True
         self.do_predict = True
         self.do_eval = True
-        self.batch_size = 20
+        self.batch_size = 32
 
         self.learning_rate = 5e-5
         self.num_train_epochs = 3.0
