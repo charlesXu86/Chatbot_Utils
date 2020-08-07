@@ -24,7 +24,7 @@ import os
 import six
 
 import tensorflow as tf
-from bert4tf import tokenization
+from Base_model.bert import tokenization
 
 
 def convert_to_unicode(text):
