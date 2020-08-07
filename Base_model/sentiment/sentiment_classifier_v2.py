@@ -23,9 +23,9 @@ import logging
 
 from queue import Queue
 from threading import Thread
-from bert4tf import modeling
-from bert4tf import optimization
-from bert4tf import tokenization
+from Base_model.bert import modeling
+from Base_model.bert import optimization
+from Base_model.bert import tokenization
 
 from Base_model.sentiment.config import Config
 from Base_model.sentiment.Classifier_utils import convert_to_unicode
