@@ -154,7 +154,7 @@ pycurl==7.43.0.5
 pydocstyle==4.0.1
 pyflakes==2.1.1
 pygame==1.9.6
-Pygments==2.5.2
+Pygments==2.7.4
 pylint==2.4.4
 pyobjc==6.2
 pyobjc-core==6.2
